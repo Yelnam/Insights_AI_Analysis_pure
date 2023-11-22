@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>⌈
+
+<head>
+    <title>AI Analysis</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>⌈⌈
+    
+    <!-- Bootstrap CSS. COMMENTED OUT AS IT WAS APPLYING UNWANTED STYLES ACROSS PAGE
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
+
+    <!-- FontAwesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JS and its dependencies -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>--> <!-- slim was overriding jquery and removing functionalities -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <img id="o_logo_header"src="{{ url_for('static', filename='Images/Logos/O_logo_white.jpg') }}" alt="O Logo" width=150 height="auto">
+    </header>
+
+    <div class="container">
+
+        <div class="column_full_analysis">
+
+            <h1>Batch analysis from Excel/RSS</h1>
+
+            <form id="upload-form" method="POST" enctype="multipart/form-data">
+
+                <hr class = line-subtle>
+                
+                <div class = "white-bg">
+
+                    <label for="model_full">Select model to use for analysis</label><br>
+                    <div class="binary-choice" data-input-id="model_full">
+                        <button type="button" class="binary-choice-button gpt-button" id="gpt-3.5-turbo" onclick="document.getElementById('model_full').value=this.id;">GPT3</button>
+                        <button type="button" class="binary-choice-button gpt-button" id="gpt-4" onclick="document.getElementById('model_full').value=this.id;">GPT4</button>
+                        <input type="hidden" id="model_full" name="model_full" value="" />
+                    </div>
+                
+                    <br>
+                
+                    <label for="data_source">Select data source type</label><br>
+                    <div class="binary-choice" data-input-id="data_source">
+                        <button type="button" class="binary-choice-button data-source-button" id="Excel" onclick="document.getElementById('data_source').value=this.id;">Excel</button>
+                        <button type="button" class="binary-choice-button data-source-button" id="RSS" onclick="document.getElementById('data_source').value=this.id;">RSS</button>
+                        <input type="hidden" id="data_source" name="data_source" value="" />
+                    </div>
+
+                    <div id="excel-input-section" style="display: none;">
+                    <br>
+                    <label for="file">Click 'Choose File' to upload Excel data file:</label><br>
+                    <input type="file" id="file" name="file"><br>
+                    </div>
+
+                    <div id="rss-input-section" style="display: none;">
+                    <br>
+                    <label for="rss_url">Enter URL of RSS feed:</label><br>
+                    <input type="text" id="rss_url" name="rss_url" class="text-input"><br>
+                    </div>
+
+                </div>
+
+                <hr class = line-light>
+
+                <div class = "white-bg">
+
+                    <label for="company">Company Name:</label><br>
+                    <input type="text" id="company" name="company" class="text-input"><br>
+
+                </div>
+
+                <hr class = line-light>
+                
+                <div class = "white-bg">
+
+                    <label for="del_or_pub">Use Published or Delivered date?</label><br>
+                    <div class="binary-choice" data-input-id="del_or_pub">
+                        <button type="button" class="binary-choice-button yes-button" id="P" onclick="document.getElementById('del_or_pub').value=this.id;">Published</button>
+                        <button type="button" class="binary-choice-button no-button" id="D" onclick="document.getElementById('del_or_pub').value=this.id;">Delivered</button>
+                        <input type="hidden" id="del_or_pub" name="del_or_pub" value="" />
+                    </div>
+                    
+                    <br>
+
+                    <label for="year">Year:
+                    </label><br>
+                    <input type="text" id="year" name="year" class="text-input" placeholder="Enter year, format YYYY">
+                    
+                    <br>
+
+                    <label for="month">Month:</label><br>
+                    <select id="month" name="month">
+                        <option value="">Select...</option>
+                        <option value=1>January</option>
+                        <option value=2>February</option>
+                        <option value=3>March</option>
+                        <option value=4>April</option>
+                        <option value=5>May</option>
+                        <option value=6>June</option>
+                        <option value=7>July</option>
+                        <option value=8>August</option>
+                        <option value=9>September</option>
+                        <option value=10>October</option>
+                        <option value=11>November</option>
+                        <option value=12>December</option>
+                    </select><br>
+                
+                </div>
+
+                <hr class = line-light>
+
+                <div class = "white-bg">
+
+                    <label for="sample_rows">Analysis sample size:
+                        <div class="tooltip"><i class="fas fa-info-circle"></i>
+                            <span class="tooltiptext" id="sample_tooltip">Choose number of articles to analyse,<br>
+                            or enter "All" to analyse entire dataset.<br><br>
+                            GPT 3.5 charged at roughly 0.25 cents per article.<br><br>
+                            GPT 4 charged at roughly 5 cents per article</span>
+                        </div>
+                    </label><br>
+                    <input type="text" id="sample_rows" name="sample_rows" class="text-input"><br>     
+                    
+                    <br>   
+
+                    <label for="sample_type">Sampling method:</label><br>
+                    <select id="sample_type" name="sample_type">
+                        <option value="">Select...</option>
+                        <option value="last_n">Last n articles</option>
+                        <option value="rand_n">Random n articles</option>
+                        <option value="i_d">List of Article IDs</option>
+                    </select><br>
+
+                </div>
+
+                <hr class = line-light>
+                    
+                <div class = "white-bg">
+
+                    <label for="lang">Response language:
+                        <div class="tooltip"><i class="fas fa-info-circle"></i>
+                            <span class="tooltiptext" id="lang_tooltip">Feature in beta testing.<br><br>
+                            Metrics with set values will be returned in the original language.<br><br>
+                            Metrics written by AI will be returned in the language selected here.</span>
+                        </div>
+                    </label><br>
+                    <input type="text" id="lang" name="lang" class="text-input" placeholder="Any language">
+                
+                </div>
+
+                <hr class = line-subtle>
+
+                <input type="submit" class="runButton" value="Click to Run">
+
+            </form>
+            
+            <br>
+
+            <script src="{{ url_for('static', filename='form_submission.js') }}"></script>
+            <script src="{{ url_for('static', filename='button_behaviour.js') }}"></script>
+            <script src="{{ url_for('static', filename='hide_unhide.js') }}"></script>
+        </div>
+
+        <div class="column_full_analysis_gi">
+
+            <h1>GI Output to Score App Analysis</h1>
+
+            <form id="upload-form-GI" method="POST" enctype="multipart/form-data">
+
+                <hr class = line-subtle>
+                
+                <div class = "white-bg">
+
+                    <label for="model_full_gi">Select model to use for analysis</label><br>
+                    <div class="binary-choice" data-input-id="model_full_gi">
+                        <button type="button" class="binary-choice-button gpt-button" id="gpt-3.5-turbo" onclick="document.getElementById('model_full_gi').value=this.id;">GPT3</button>
+                        <button type="button" class="binary-choice-button gpt-button" id="gpt-4" onclick="document.getElementById('model_full_gi').value=this.id;">GPT4</button>
+                        <input type="hidden" id="model_full_gi" name="model_full_gi" value="" />
+                    </div>
+                
+                    <br>
+                
+                    <div id="GI-excel-input-section">
+                    <br>
+                    <label for="fileGI">Click 'Choose File' to upload Global Insights Excel data file:</label><br>
+                    <input type="file" id="fileGI" name="fileGI"><br>
+                    </div>
+
+                    <br>
+                
+                    <div id="SA-excel-input-section">
+                    <br>
+                    <label for="fileSA">Click 'Choose File' to upload Score App Excel data file:</label><br>
+                    <input type="file" id="fileSA" name="fileSA"><br>
+                    </div>
+
+                </div>
+
+                <hr class = line-light>
+
+                <div class = "white-bg">
+
+                    <label for="company_gi">Company Name:</label><br>
+                    <input type="text" id="company_gi" name="company_gi" class="text-input"><br>
+
+                </div>
+
+                <hr class = line-light>
+                
+                <div class = "white-bg">
+
+                    <label for="del_or_pub_gi">Use Published or Delivered date?</label><br>
+                    <div class="binary-choice" data-input-id="del_or_pub_gi">
+                        <button type="button" class="binary-choice-button yes-button" id="P" onclick="document.getElementById('del_or_pub_gi').value=this.id;">Published</button>
+                        <button type="button" class="binary-choice-button no-button" id="D" onclick="document.getElementById('del_or_pub_gi').value=this.id;">Delivered</button>
+                        <input type="hidden" id="del_or_pub_gi" name="del_or_pub_gi" value="" />
+                    </div>
+                    
+                    <br>
+
+                    <label for="year_gi">Year:
+                    </label><br>
+                    <input type="text" id="year_gi" name="year_gi" class="text-input" placeholder="Enter year, format YYYY">
+                    
+                    <br>
+
+                    <label for="month_gi">Month:</label><br>
+                    <select id="month_gi" name="month_gi">
+                        <option value="">Select...</option>
+                        <option value=1>January</option>
+                        <option value=2>February</option>
+                        <option value=3>March</option>
+                        <option value=4>April</option>
+                        <option value=5>May</option>
+                        <option value=6>June</option>
+                        <option value=7>July</option>
+                        <option value=8>August</option>
+                        <option value=9>September</option>
+                        <option value=10>October</option>
+                        <option value=11>November</option>
+                        <option value=12>December</option>
+                    </select><br>
+                
+                </div>
+
+                <hr class = line-light>
+
+                <div class = "white-bg">
+
+                    <label for="sample_rows_gi">Analysis sample size:
+                        <div class="tooltip"><i class="fas fa-info-circle"></i>
+                            <span class="tooltiptext" id="sample_tooltip">Choose number of articles to analyse,<br>
+                            or enter "All" to analyse entire dataset.<br><br>
+                            GPT 3.5 charged at roughly 0.25 cents per article.<br><br>
+                            GPT 4 charged at roughly 5 cents per article</span>
+                        </div>
+                    </label><br>
+                    <input type="text" id="sample_rows_gi" name="sample_rows_gi" class="text-input"><br>     
+                    
+                    <br>   
+
+                    <label for="sample_type_gi">Sampling method:</label><br>
+                    <select id="sample_type_gi" name="sample_type_gi">
+                        <option value="">Select...</option>
+                        <option value="last_n">Last n articles</option>
+                        <option value="rand_n">Random n articles</option>
+                        <option value="i_d">List of Article IDs</option>
+                    </select><br>
+
+                </div>
+
+                <hr class = line-light>
+                    
+                <div class = "white-bg">
+
+                    <label for="lang_gi">Response language:
+                        <div class="tooltip"><i class="fas fa-info-circle"></i>
+                            <span class="tooltiptext" id="lang_tooltip">Feature in beta testing.<br><br>
+                            Metrics with set values will be returned in the original language.<br><br>
+                            Metrics written by AI will be returned in the language selected here.</span>
+                        </div>
+                    </label><br>
+                    <input type="text" id="lang_gi" name="lang_gi" class="text-input" placeholder="Any language">
+                
+                </div>
+
+                <hr class = line-subtle>
+
+                <input type="submit" class="runButton" value="Click to Run">
+
+            </form>
+            
+            <br>
+
+            <script src="{{ url_for('static', filename='form_submission2.js') }}"></script>
+
+        </div>
+
+        <div class="column_ad_hoc_analysis">
+
+            <h1>Ad hoc single article analysis</h1>
+
+            <hr class = line-subtle>
+            
+            <div class = "white-bg">
+
+                <label for="model_single">Select model to use for analysis</label><br>
+                    <div class="binary-choice" data-input-id="model_single">
+                        <button type="button" class="binary-choice-button gpt-button" id="gpt-3.5-turbo" onclick="document.getElementById('model_single').value=this.id;">GPT3</button>
+                        <button type="button" class="binary-choice-button gpt-button" id="gpt-4" onclick="document.getElementById('model_single').value=this.id;">GPT4</button>
+                        <input type="hidden" id="model_single" name="model_single" value="" />
+                    </div>
+
+            </div>
+
+            <hr class = line-light>
+
+            <div class = "white-bg">
+
+                <label for="article_headline">Headline</label><br>
+                <input type="text" id="article_headline" name="article_headline" class="text-input" placeholder="Paste article headline here">
+                <br>
+                <br>
+
+                <label for="article_text">Article text</label><br>
+                <textarea id="article_text" name="article_text" class="text-input" placeholder="Paste article text here"></textarea>
+                <br>
+
+            </div>
+
+            <hr class = line-light>
+
+            <div class = "white-bg">
+
+                <label for="brand_list">Brands</label><br>
+                <input type="text" id="brand_list" name="brand_list" class="text-input" placeholder="Own brand & competitors, comma-separated">
+                <br>
+
+            </div>
+
+            <hr class = line-subtle>
+
+            <button onclick="sendMessage()" class="runButton">Submit</button>
+
+            <p id="response"></p>
+
+            <script src="{{ url_for('static', filename='gen_analysis_single_article.js') }}"></script>
+        </div>
+
+        <div class="chatbot_container">
+        
+            <div class="column_chatbot">
+                 
+                <img src="{{ url_for('static', filename='Images/Mascots/Wall-O8.png') }}" class="centered_image" alt="Wall-O" width=150% height="auto">
+                <br>
+
+                <textarea id="message" placeholder="Try: 'How do I use this website?' or 'Who can translate an article from Chinese?'"></textarea>
+
+                <p id="response"></p>
+                <div id="conversation"></div>
+
+                <script src="{{ url_for('static', filename='chat_messenger.js') }}"></script>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer class="footer-positions">
+        <a href="https://twitter.com/Onclusive" target="_blank">
+            <img src="{{ url_for('static', filename='Images/Icons/Twitter.png') }}" class="footer_image" alt="Onclusive Twitter" width=40 height="auto" style="padding: 5px;">
+        </a>
+        <a href="https://linkedin.com/company/onclusive" target="_blank">
+            <img src="{{ url_for('static', filename='Images/Icons/LinkedIn.png') }}" class="footer_image" alt="Onclusive LinkedIn" width=40 height="auto" style="padding: 5px;">
+        </a>
+        <a href="mailto:rob.manley@onclusive.com?subject=LLM Prototype Feedback">
+            <img src="{{ url_for('static', filename='Images/Icons/Feedback.png') }}" class="footer_image" alt="Provide feedback" width=40 height="auto" style="padding: 5px;">
+        </a>
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,8 @@
+**/__pycache__/
+*.pyc
+/Old/
+/templates/Old/
+/O_GPT_venv/
+OpenAIKey.py
+o_gpt_venv
+env/

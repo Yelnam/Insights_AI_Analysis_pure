@@ -1,0 +1,400 @@
+/* General ----------------------------------------------------------------- */
+
+:root {
+    --header-height: 75px;
+    --footer-height: 45px;
+}
+
+::placeholder{
+    color: #aaaaaa;
+}
+
+/* Header -------------------------------------------------------- */
+
+header {
+    height: var(--header-height);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000; /* This makes sure your header is always on top */
+    background-color: #1E1E23;
+    color: #ffffff;
+  }
+
+#o_logo_header{
+    margin:25px;
+}
+
+/* Footer -------------------------------------------------------- */
+
+footer {
+    height: var(--footer-height);
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    z-index: 1000;
+    background-color: #ffffff;
+    color: #ffffff;
+    padding: 10px
+}
+
+.footer-positions {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 20px;
+}
+
+/* Body ---------------------------------------------------------- */
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+}
+
+body {
+    background-color: #f2f2f2;
+    color: rgb(15, 8, 8);
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    padding-bottom: var(--footer-height); /* Add padding to the bottom of the body equal to the footer height */;
+}
+
+h1 {
+    text-align: center;
+    font-family: 'Gill Sans', sans-serif;
+    font-size: 15px;
+    color: #ffffff;
+    background-color: #45365e;
+    padding: 25px 25px;
+    margin: 0;
+}
+
+.container {
+    height: 100%;
+    padding-top: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box; 
+}
+
+/* Sections ------------------------------------------------------ */
+
+.column_full_analysis,
+.column_full_analysis_gi,
+.column_ad_hoc_analysis,
+.column_ppt,
+.column_chatbot {
+    height: 100%;
+    flex: auto;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.column_full_analysis,
+.column_full_analysis_gi,
+.column_ad_hoc_analysis,
+.column_ppt {
+    background-color: #ffffff; 
+}
+
+.column_chatbot {
+    width: 300px;
+    padding: 25px;
+    background-color: #f3bebe; 
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.white-bg {
+    background-color: #ffffff; 
+    padding: 8px; 
+    margin-bottom: 0px; 
+}
+
+.light-pink-bg { 
+    background-color: #f1e3e3fb; 
+    padding: 8px; 
+    margin-bottom: 0px; 
+}
+
+.grey-bg {
+    background-color: #f0f0f0; 
+    padding: 8px; 
+    margin-bottom: 0px; 
+}
+
+/* Single article analysis ----------------------------- */
+
+#article_headline {
+    width: 250px;
+    font-family: 'Gill Sans', sans-serif;
+    font-size: 12px;
+    color: #555555;
+}
+
+#article_text {
+    width: 250px;
+    font-family: 'Gill Sans', sans-serif;
+    font-size: 12px;
+    color: #555555;
+}
+
+#brand_list {
+    width: 250px;
+    font-family: 'Gill Sans', sans-serif;
+    font-size: 12px;
+    color: #555555;
+}
+
+.brandTable {
+    width: 500px; 
+    font-family: 'Gill Sans', sans-serif;
+    font-size: 12px;
+    color: #444444;
+    padding-bottom: var(--footer-height); /* Add padding to the bottom of the body equal to the footer height */;
+}
+
+.brandTable caption {
+    font-weight: bold;
+    color: white;
+    background-color: #3d976a; 
+}
+
+.brandTable th {
+    width: 150px;
+    text-align: right;
+    padding: 0 10px;
+}
+
+.brandTable td {
+    padding: 0 10px;
+}
+
+.brandTable tr:nth-child(even) {
+    background-color: #ebe4e4; /* light grey */
+}
+
+/* Chatbot --------------------------------------------- */
+
+.chatbot-container {
+    position: sticky;
+    top: var(--header-height);
+  }
+
+.centered_image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.user {
+    display: inline-block;
+    text-align: right;
+    color: #ffffff; 
+    font-size: 14px;
+    background-color: #09b958;
+    /*border: 1px solid #ffffff; */
+    border-radius: 8px;
+    padding: 5px 10px;
+    padding-bottom: 7px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 25%;
+    max-width: 75%; 
+    clear: both;
+    word-wrap: break-word; 
+}
+
+.bot {
+    display: inline-block;
+    text-align: left;
+    color: #ffffff; 
+    font-size: 14px;
+    background-color: #6ba0c4;
+    /*border: 1px solid #ffffff; */
+    border-radius: 8px;
+    padding: 5px 10px;
+    padding-bottom: 7px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-right: 25%;
+    max-width: 75%; 
+    clear: both;
+    word-wrap: break-word; 
+}
+
+#message {
+    width: 100%;
+    border: none;
+    outline-width: 1px;
+    outline-color: #cccccc;
+    color: #666666;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 14px;
+}
+
+#conversation {
+    display: flex;
+    flex-direction: column-reverse;
+    overflow: auto;
+    height: auto;
+}
+
+/* Elements ------------------------------------------------------ */
+
+/* Inputs ---------------------------------------------- */
+
+input {
+    font-family: 'Gill Sans', sans-serif;
+    font-size: 12px;
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem; 
+}
+
+.text-input {
+    border: 1px solid #c7c7c7;
+}
+
+/* Buttons --------------------------------------------- */
+
+.runButton {
+    width: 100%;
+    background-color: #3d976a; 
+    color: #ffffff; 
+    border: 2px solid #ffffff;
+    padding: 10px;
+}
+
+.runButton:hover {
+    background-color: #327e58;
+}
+
+.binary-choice-button {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-top: 2px;
+    border: none;
+    color: white;
+    background-color: #75daa7;
+    cursor: pointer;
+    outline: none;
+}
+
+.binary-choice-button:hover {
+    background-color: #09b958;
+}
+
+.binary-choice-button.selected {
+    background-color: #09b958;
+}
+
+.gpt-button {
+    padding: 10px 0;
+    width: 48%;
+    border: none;
+    color: white;
+    background-color: #d1cee9;
+    cursor: pointer;
+    outline: none;
+}
+
+.gpt-button:hover {
+    background-color: #6ba0c4;
+}
+
+.gpt-button.selected {
+    background-color: #6ba0c4;
+}
+
+.data-source-button {
+    padding: 10px 0;
+    width: 48%;
+    border: none;
+    color: white;
+    background-color: #d1cee9;
+    cursor: pointer;
+    outline: none;
+}
+
+.data-source-button:hover {
+    background-color: #6ba0c4;
+}
+
+.data-source-button.selected {
+    background-color: #6ba0c4;
+}
+
+/* Lines ----------------------------------------------- */
+
+hr.line-light {
+    border: none;
+    /* border-top: 1px solid #d6d6d6;*/
+    color: #d6d6d6;
+    background-color: #d6d6d6;
+    height: 1px;
+    width: 94%;
+    margin: 1 auto; /* This centers the hr based on width by setting top and bottom margin to zero, and L and R to auto*/
+}
+hr.line-subtle {
+    border: none;
+    border-top: 1px solid #ffffff;
+    color: #e8e8e8;
+    background-color: #e8e8e8;
+    height: 1px;
+    width: 94%;
+    margin: 1 auto; /* This centers the hr */
+}
+
+/* Tooltips -------------------------------------------- */
+
+.fas.fa-info-circle {
+    color: #3d976a;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    /* min-width: 200px;
+    max-width: 350px; */
+    width: auto;
+    background-color: #3d976a;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position the tooltip above the text */
+    left: 50%;
+    margin-left: -120px; /* Use half the width to center the tooltip */
+    opacity: 0.1;
+    transition: opacity 0.25s;
+    font-size: smaller;
+}
+
+#sample_tooltip{
+    width: 250px;
+}
+
+#lang_tooltip{
+    width: 200px;
+}
+
+#ppt_yn_tooltip{
+    width: 250px;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
